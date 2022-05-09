@@ -1,0 +1,146 @@
+swagger: '2.0'
+info:
+  title: Assignment API
+  version: "0.1"
+  description: An Example API
+consumes:
+  - application/json
+produces:
+  - application/json
+# security:
+  # enable OAuth protection for all REST endpoints
+  # (only active if the TOKENINFO_URL environment variable is set)
+  # - oauth2: [uid]
+paths:
+  /persons:
+    get:
+      tags: [Persons]
+      operationId: app.get_persons
+      summary: Get all persons
+      parameters:
+        - name: limit
+          in: query
+          type: integer
+          format: int32
+          minimum: 0
+          default: 100
+      responses:
+        200:
+          description: Return persons
+          schema:
+            type: object
+            properties:
+              pets:
+                type: array
+                items:
+                  $ref: '#/definitions/Person'
+  /persons/{id}:
+    get:
+      tags: [Persons]
+      operationId: app.get_person
+      summary: Get a single person
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        200:
+          description: Return person
+          schema:
+            $ref: '#/definitions/Person'
+        404:
+          description: Person does not exist
+    put:
+      tags: [Persons]
+      operationId: app.put_person
+      summary: Create or update a person
+      parameters:
+        - $ref: '#/parameters/id'
+        - name: person
+          in: body
+          schema:
+            $ref: '#/definitions/Person'
+      responses:
+        200:
+          description: Person updated
+        201:
+          description: New person created
+    delete:
+      tags: [Persons]
+      operationId: app.delete_person
+      summary: Remove a person
+      parameters:
+        - $ref: '#/parameters/id'
+      responses:
+        204:
+          description: Person was deleted
+        404:
+          description: Person does not exist
+
+
+parameters:
+  id:
+    name: id
+    description: Person's ID
+    in: path
+    type: integer
+    required: true
+    
+definitions:
+  Person:
+    type: object
+    required:
+      - name
+    properties:
+
+      # id:
+      #   type: integer
+      #   description: Identifier for a person
+      #   example: 1
+      #   readOnly: true
+
+      checked:
+        type: boolean
+        description: Person is checked
+        example: 1
+
+
+      name:
+        type: string
+        description: Person's name
+        example: "Susie"
+        minLength: 1
+        maxLength: 100
+
+      person_type:
+        type: string
+        description: Kind of person
+        example: "Indian"
+        minLength: 1
+
+      age:
+        type: number
+        description: Age of person
+        example: 25
+
+      description:
+        type: string
+        description: About profession of a person
+        example: "works in IT"
+        minLength: 1
+        maxLength: 100
+
+      # date:
+      #   type: string
+      #   format: date-time
+      #   description: Creation time
+      #   example: "2015-07-07T15:49:51.230+02:00"
+      #   readOnly: true
+   
+
+
+# securityDefinitions:
+#   oauth2:
+#     type: oauth2
+#     flow: implicit
+#     authorizationUrl: https://example.com/oauth2/dialog
+#     scopes:
+#       uid: Unique identifier of the user accessing the service.
